@@ -22,16 +22,9 @@ interface AnalysisCardProps {
     score?: number;
     reasons: string[];
   };
-  analyst?: {
-    targetMeanPrice: number;
-    targetHighPrice: number;
-    targetLowPrice: number;
-    recommendationKey: string;
-    numberOfAnalystOpinions: number;
-  } | null;
 }
 
-export default function AnalysisCard({ symbol, displayName, lastPrice, change, changePercent, currency, indicators, analysis, analyst }: AnalysisCardProps) {
+export default function AnalysisCard({ symbol, displayName, lastPrice, change, changePercent, currency, indicators, analysis }: AnalysisCardProps) {
   const [activeInfo, setActiveInfo] = useState<string | null>(null);
 
   // 한국 주식의 경우 소수점 생략
@@ -87,8 +80,8 @@ export default function AnalysisCard({ symbol, displayName, lastPrice, change, c
 
   return (
     <div className="glass-panel" style={{ padding: "1.5rem" }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem", gap: "1.5rem" }}>
-        <div style={{ minWidth: 0, flex: 1 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1.5rem", gap: "1.5rem", flexWrap: "wrap" }}>
+        <div style={{ flex: 1, minWidth: "200px" }}>
           <h2 style={{ margin: 0, fontSize: "1.5rem", fontWeight: "bold", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
             {displayName || symbol}
             {displayName && displayName !== symbol && (
@@ -254,7 +247,7 @@ export default function AnalysisCard({ symbol, displayName, lastPrice, change, c
       <div>
         <h3 style={{ marginBottom: "0.75rem", color: "var(--text-light)" }}>AI Analysis</h3>
         <ul style={{ listStyle: "none", padding: 0 }}>
-          {analysis.reasons.map((reason, idx) => (
+          {analysis.reasons.map((reason: string, idx: number) => (
             <li key={idx} style={{ 
               position: "relative",
               paddingLeft: "1.5rem",
@@ -275,87 +268,6 @@ export default function AnalysisCard({ symbol, displayName, lastPrice, change, c
           ))}
         </ul>
       </div>
-
-      {/* Analyst Consensus Summary */}
-      {analyst && analyst.numberOfAnalystOpinions > 0 && (
-        <div style={{ marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
-          <h3 style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem", color: "var(--text-light)" }}>
-            <TrendingUp size={18} /> WallStreet Consensus (목표가)
-          </h3>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-            <span style={{ fontSize: "0.9rem", color: "var(--text-muted)" }}>
-              {analyst.numberOfAnalystOpinions}개 기관 참여
-            </span>
-            {analyst.recommendationKey && (
-              <span style={{ 
-                background: "rgba(59, 130, 246, 0.15)", 
-                color: "var(--primary)", 
-                padding: "2px 8px", 
-                borderRadius: "4px", 
-                fontSize: "0.85rem",
-                fontWeight: "bold",
-                textTransform: "uppercase"
-              }}>
-                {analyst.recommendationKey.replace('_', ' ')}
-              </span>
-            )}
-          </div>
-          
-          <div style={{ marginBottom: "0.5rem", position: "relative", paddingBottom: "2rem", paddingTop: "1rem" }}>
-            {/* Background Track */}
-            <div style={{ width: "100%", height: "8px", background: "rgba(255,255,255,0.1)", borderRadius: "4px", position: "relative" }}>
-              {/* Highlight range from Low to High */}
-              <div style={{ 
-                position: "absolute", 
-                left: `${((analyst.targetLowPrice - Math.min(analyst.targetLowPrice, lastPrice)) / (Math.max(analyst.targetHighPrice, lastPrice) - Math.min(analyst.targetLowPrice, lastPrice) || 1)) * 100}%`, 
-                width: `${((analyst.targetHighPrice - analyst.targetLowPrice) / (Math.max(analyst.targetHighPrice, lastPrice) - Math.min(analyst.targetLowPrice, lastPrice) || 1)) * 100}%`, 
-                height: "100%", 
-                background: "rgba(59, 130, 246, 0.2)",
-                borderRadius: "4px"
-              }} />
-
-              {/* Mean Marker */}
-               <div style={{
-                position: "absolute",
-                left: `${((analyst.targetMeanPrice - Math.min(analyst.targetLowPrice, lastPrice)) / (Math.max(analyst.targetHighPrice, lastPrice) - Math.min(analyst.targetLowPrice, lastPrice) || 1)) * 100}%`,
-                top: "-4px",
-                bottom: "-4px",
-                width: "4px",
-                background: "var(--primary)",
-                borderRadius: "2px",
-                transform: "translateX(-50%)"
-              }}>
-                <div style={{ position: "absolute", top: "-20px", left: "50%", transform: "translateX(-50%)", fontSize: "0.75rem", color: "var(--text-light)", whiteSpace: "nowrap" }}>
-                  평균: {analyst.targetMeanPrice.toLocaleString(undefined, { maximumFractionDigits: fractionDigits })}
-                </div>
-              </div>
-
-              {/* Current Price Marker */}
-              <div style={{
-                position: "absolute",
-                left: `${((lastPrice - Math.min(analyst.targetLowPrice, lastPrice)) / (Math.max(analyst.targetHighPrice, lastPrice) - Math.min(analyst.targetLowPrice, lastPrice) || 1)) * 100}%`,
-                top: "-6px",
-                bottom: "-6px",
-                width: "6px",
-                background: "var(--warning)",
-                borderRadius: "3px",
-                transform: "translateX(-50%)",
-                boxShadow: "0 0 5px rgba(251, 191, 36, 0.5)",
-                zIndex: 2
-              }}>
-                <div style={{ position: "absolute", bottom: "-22px", left: "50%", transform: "translateX(-50%)", fontSize: "0.75rem", color: "var(--warning)", fontWeight: "bold", whiteSpace: "nowrap" }}>
-                  현재가
-                </div>
-              </div>
-            </div>
-            {/* Low & High text at bottom corners approx */}
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "8px" }}>
-              <span>최저: {analyst.targetLowPrice.toLocaleString(undefined, { maximumFractionDigits: fractionDigits })}</span>
-              <span>최고: {analyst.targetHighPrice.toLocaleString(undefined, { maximumFractionDigits: fractionDigits })}</span>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

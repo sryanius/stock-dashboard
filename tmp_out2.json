@@ -1,0 +1,99 @@
+{
+  "recommendationTrend": {
+    "trend": [
+      {
+        "period": "0m",
+        "strongBuy": 1,
+        "buy": 0,
+        "hold": 10,
+        "sell": 1,
+        "strongSell": 1
+      },
+      {
+        "period": "-1m",
+        "strongBuy": 1,
+        "buy": 1,
+        "hold": 11,
+        "sell": 1,
+        "strongSell": 1
+      },
+      {
+        "period": "-2m",
+        "strongBuy": 1,
+        "buy": 1,
+        "hold": 11,
+        "sell": 1,
+        "strongSell": 1
+      },
+      {
+        "period": "-3m",
+        "strongBuy": 1,
+        "buy": 2,
+        "hold": 11,
+        "sell": 1,
+        "strongSell": 1
+      }
+    ],
+    "maxAge": 86400
+  },
+  "price": {
+    "maxAge": 1,
+    "regularMarketChangePercent": 0.030325444,
+    "regularMarketChange": 410,
+    "regularMarketTime": "2026-03-24T04:36:38.000Z",
+    "priceHint": 2,
+    "regularMarketPrice": 13930,
+    "regularMarketDayHigh": 14060,
+    "regularMarketDayLow": 13300,
+    "regularMarketVolume": 242115,
+    "regularMarketPreviousClose": 13520,
+    "regularMarketSource": "DELAYED",
+    "regularMarketOpen": 13690,
+    "exchange": "KOE",
+    "exchangeName": "KOSDAQ",
+    "exchangeDataDelayedBy": 20,
+    "marketState": "REGULAR",
+    "quoteType": "EQUITY",
+    "symbol": "293490.KQ",
+    "underlyingSymbol": null,
+    "shortName": "Kakao Games",
+    "longName": "Kakao Games Corp.",
+    "currency": "KRW",
+    "quoteSourceName": "Delayed Quote",
+    "currencySymbol": "₩",
+    "fromCurrency": null,
+    "toCurrency": null,
+    "lastMarket": null,
+    "marketCap": 1142433120256
+  },
+  "financialData": {
+    "maxAge": 86400,
+    "currentPrice": 13930,
+    "targetHighPrice": 18000,
+    "targetLowPrice": 9000,
+    "targetMeanPrice": 13858.333,
+    "targetMedianPrice": 14000,
+    "recommendationMean": 3.15385,
+    "recommendationKey": "hold",
+    "numberOfAnalystOpinions": 12,
+    "totalCash": 789303001088,
+    "totalCashPerShare": 9624.188,
+    "ebitda": 16719582208,
+    "totalDebt": 0,
+    "quickRatio": 1.275,
+    "currentRatio": 1.372,
+    "totalRevenue": 499353124864,
+    "revenuePerShare": 6091.191,
+    "returnOnAssets": -0.00694,
+    "returnOnEquity": -0.084259994,
+    "grossProfits": 499353124864,
+    "freeCashflow": -21995909120,
+    "operatingCashflow": -42619023360,
+    "revenueGrowth": -0.382,
+    "grossMargins": 1,
+    "ebitdaMargins": 0.03348,
+    "operatingMargins": -0.13236,
+    "profitMargins": -0.22334999,
+    "financialCurrency": "KRW"
+  }
+}

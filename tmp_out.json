@@ -1,0 +1,101 @@
+{
+  "recommendationTrend": {
+    "trend": [
+      {
+        "period": "0m",
+        "strongBuy": 12,
+        "buy": 23,
+        "hold": 1,
+        "sell": 0,
+        "strongSell": 1
+      },
+      {
+        "period": "-1m",
+        "strongBuy": 11,
+        "buy": 23,
+        "hold": 2,
+        "sell": 0,
+        "strongSell": 0
+      },
+      {
+        "period": "-2m",
+        "strongBuy": 11,
+        "buy": 23,
+        "hold": 2,
+        "sell": 0,
+        "strongSell": 0
+      },
+      {
+        "period": "-3m",
+        "strongBuy": 10,
+        "buy": 22,
+        "hold": 2,
+        "sell": 0,
+        "strongSell": 1
+      }
+    ],
+    "maxAge": 86400
+  },
+  "price": {
+    "maxAge": 1,
+    "regularMarketChangePercent": 0.01556629,
+    "regularMarketChange": 2900,
+    "regularMarketTime": "2026-03-24T04:36:54.000Z",
+    "priceHint": 2,
+    "regularMarketPrice": 189200,
+    "regularMarketDayHigh": 196000,
+    "regularMarketDayLow": 185500,
+    "regularMarketVolume": 18132502,
+    "regularMarketPreviousClose": 186300,
+    "regularMarketSource": "DELAYED",
+    "regularMarketOpen": 195500,
+    "exchange": "KSC",
+    "exchangeName": "KSE",
+    "exchangeDataDelayedBy": 20,
+    "marketState": "REGULAR",
+    "quoteType": "EQUITY",
+    "symbol": "005930.KS",
+    "underlyingSymbol": null,
+    "shortName": "SamsungElec",
+    "longName": "Samsung Electronics Co., Ltd.",
+    "currency": "KRW",
+    "quoteSourceName": "Delayed Quote",
+    "currencySymbol": "₩",
+    "fromCurrency": null,
+    "toCurrency": null,
+    "lastMarket": null,
+    "marketCap": 1265006918238208
+  },
+  "financialData": {
+    "maxAge": 86400,
+    "currentPrice": 189200,
+    "targetHighPrice": 340000,
+    "targetLowPrice": 110000,
+    "targetMeanPrice": 239873.48,
+    "targetMedianPrice": 250000,
+    "recommendationMean": 1.45946,
+    "recommendationKey": "strong_buy",
+    "numberOfAnalystOpinions": 37,
+    "totalCash": 125847113564160,
+    "totalCashPerShare": 18980.95,
+    "ebitda": 89259277025280,
+    "totalDebt": 25239138336768,
+    "quickRatio": 1.733,
+    "currentRatio": 2.328,
+    "totalRevenue": 333605947572224,
+    "debtToEquity": 5.785,
+    "revenuePerShare": 49784.59,
+    "returnOnAssets": 0.0504,
+    "returnOnEquity": 0.10783,
+    "grossProfits": 131370424729600,
+    "freeCashflow": 23944373469184,
+    "operatingCashflow": 85315146481664,
+    "earningsGrowth": 1.622,
+    "revenueGrowth": 0.238,
+    "grossMargins": 0.39379,
+    "ebitdaMargins": 0.26756,
+    "operatingMargins": 0.21322,
+    "profitMargins": 0.13267,
+    "financialCurrency": "KRW"
+  }
+}

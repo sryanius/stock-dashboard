@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
         interval: "1d",
       }).catch(() => null),
       yahooFinance.quote(symbol).catch(() => null),
-      yahooFinance.quoteSummary(symbol, { modules: ['financialData'] }).catch(() => null)
+      yahooFinance.quoteSummary(symbol, { modules: ['financialData', 'upgradeDowngradeHistory'] }).catch(() => null)
     ]);
     
     const dailyChart = dailyChartResult || chartResult;
@@ -268,6 +268,7 @@ export async function GET(request: NextRequest) {
     const currency = (quoteResult && quoteResult.currency) || chartResult.meta.currency || "";
 
     const financialData = summaryResult?.financialData;
+    const upgradeHistory = summaryResult?.upgradeDowngradeHistory?.history || [];
     let analyst = null;
     if (financialData && financialData.targetMeanPrice) {
       analyst = {
@@ -276,6 +277,7 @@ export async function GET(request: NextRequest) {
         targetLowPrice: financialData.targetLowPrice,
         recommendationKey: financialData.recommendationKey,
         numberOfAnalystOpinions: financialData.numberOfAnalystOpinions,
+        history: upgradeHistory.slice(0, 8)
       };
     }
 

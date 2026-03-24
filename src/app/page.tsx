@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import SearchBox from "@/components/SearchBox";
 import StockChart from "@/components/StockChart";
 import AnalysisCard from "@/components/AnalysisCard";
+import AnalystCard from "@/components/AnalystCard";
 import { Activity } from "lucide-react";
 
 export default function Home() {
@@ -62,7 +63,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", width: "100%", padding: "0 1rem" }}>
+    <div style={{ width: "100%" }}>
       <div style={{ textAlign: "center", marginBottom: "3rem" }}>
         <h1 style={{ 
           fontSize: "3rem", 
@@ -169,7 +170,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1fr)", width: "100%", alignSelf: "start" }}>
+          <div className="cards-section" style={{ alignSelf: "start" }}>
             <AnalysisCard 
               symbol={data.symbol}
               displayName={data.displayName}
@@ -179,8 +180,14 @@ export default function Home() {
               currency={data.currency}
               indicators={data.indicators}
               analysis={data.analysis}
-              analyst={data.analyst}
             />
+            {data.analyst && data.analyst.numberOfAnalystOpinions > 0 && (
+              <AnalystCard 
+                analyst={data.analyst} 
+                lastPrice={data.lastPrice} 
+                currency={data.currency} 
+              />
+            )}
           </div>
 
         </div>

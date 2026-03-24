@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { createChart, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries } from "lightweight-charts";
+import React, { useEffect, useRef, useState } from "react";
+import { createChart, ColorType, CrosshairMode, CandlestickSeries, HistogramSeries, LineSeries, ISeriesApi } from "lightweight-charts";
 
 interface StockChartProps {
   data: {
@@ -21,6 +21,15 @@ interface StockChartProps {
 
 export default function StockChart({ data }: StockChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
+  const [showEma, setShowEma] = useState(false);
+  const [showBb, setShowBb] = useState(false);
+
+  // Store series references for toggling visibility
+  const ema5SeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
+  const ema60SeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
+  const bbUpperSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
+  const bbMiddleSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
+  const bbLowerSeriesRef = useRef<ISeriesApi<"Line"> | null>(null);
 
   useEffect(() => {
     if (!chartContainerRef.current || data.length === 0) return;
@@ -72,24 +81,29 @@ export default function StockChart({ data }: StockChartProps) {
     const bbLowerData = adjustedData.filter(d => d.bbLower !== null).map(d => ({ time: d.time, value: d.bbLower }));
 
     if (ema5Data.length > 0) {
-      const ema5Series = chart.addSeries(LineSeries, { color: 'rgba(234, 179, 8, 0.8)', lineWidth: 2, title: 'EMA5' });
+      const ema5Series = chart.addSeries(LineSeries, { color: 'rgba(234, 179, 8, 0.8)', lineWidth: 2, title: 'EMA5', visible: showEma });
       ema5Series.setData(ema5Data as any);
+      ema5SeriesRef.current = ema5Series;
     }
     if (ema60Data.length > 0) {
-      const ema60Series = chart.addSeries(LineSeries, { color: 'rgba(99, 102, 241, 0.8)', lineWidth: 2, title: 'EMA60' });
+      const ema60Series = chart.addSeries(LineSeries, { color: 'rgba(99, 102, 241, 0.8)', lineWidth: 2, title: 'EMA60', visible: showEma });
       ema60Series.setData(ema60Data as any);
+      ema60SeriesRef.current = ema60Series;
     }
     if (bbUpperData.length > 0) {
-      const bbUpperSeries = chart.addSeries(LineSeries, { color: 'rgba(148, 163, 184, 0.5)', lineWidth: 1, lineStyle: 2 });
+      const bbUpperSeries = chart.addSeries(LineSeries, { color: 'rgba(148, 163, 184, 0.5)', lineWidth: 1, lineStyle: 2, visible: showBb });
       bbUpperSeries.setData(bbUpperData as any);
+      bbUpperSeriesRef.current = bbUpperSeries;
     }
     if (bbLowerData.length > 0) {
-      const bbLowerSeries = chart.addSeries(LineSeries, { color: 'rgba(148, 163, 184, 0.5)', lineWidth: 1, lineStyle: 2 });
+      const bbLowerSeries = chart.addSeries(LineSeries, { color: 'rgba(148, 163, 184, 0.5)', lineWidth: 1, lineStyle: 2, visible: showBb });
       bbLowerSeries.setData(bbLowerData as any);
+      bbLowerSeriesRef.current = bbLowerSeries;
     }
     if (bbMiddleData.length > 0) {
-      const bbMiddleSeries = chart.addSeries(LineSeries, { color: 'rgba(148, 163, 184, 0.3)', lineWidth: 1, lineStyle: 3 });
+      const bbMiddleSeries = chart.addSeries(LineSeries, { color: 'rgba(148, 163, 184, 0.3)', lineWidth: 1, lineStyle: 3, visible: showBb });
       bbMiddleSeries.setData(bbMiddleData as any);
+      bbMiddleSeriesRef.current = bbMiddleSeries;
     }
 
     // Add Volume
@@ -166,7 +180,44 @@ export default function StockChart({ data }: StockChartProps) {
       window.removeEventListener("resize", handleResize);
       chart.remove();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
-  return <div ref={chartContainerRef} style={{ width: "100%", height: "100%", position: "relative" }} />;
+  useEffect(() => {
+    if (ema5SeriesRef.current) ema5SeriesRef.current.applyOptions({ visible: showEma });
+    if (ema60SeriesRef.current) ema60SeriesRef.current.applyOptions({ visible: showEma });
+  }, [showEma]);
+
+  useEffect(() => {
+    if (bbUpperSeriesRef.current) bbUpperSeriesRef.current.applyOptions({ visible: showBb });
+    if (bbMiddleSeriesRef.current) bbMiddleSeriesRef.current.applyOptions({ visible: showBb });
+    if (bbLowerSeriesRef.current) bbLowerSeriesRef.current.applyOptions({ visible: showBb });
+  }, [showBb]);
+
+  const btnStyle = (active: boolean) => ({
+    background: active ? "rgba(59, 130, 246, 0.8)" : "rgba(30, 41, 59, 0.8)",
+    color: active ? "#ffffff" : "var(--text-muted)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: "4px",
+    padding: "4px 8px",
+    fontSize: "0.75rem",
+    cursor: "pointer",
+    backdropFilter: "blur(4px)",
+    transition: "all 0.2s",
+    zIndex: 10
+  });
+
+  return (
+    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+      <div style={{ position: "absolute", top: "10px", left: "10px", display: "flex", gap: "0.5rem", zIndex: 10 }}>
+        <button onClick={() => setShowEma(!showEma)} style={btnStyle(showEma)}>
+          EMA 5/60 {showEma ? "ON" : "OFF"}
+        </button>
+        <button onClick={() => setShowBb(!showBb)} style={btnStyle(showBb)}>
+          Bollinger {showBb ? "ON" : "OFF"}
+        </button>
+      </div>
+      <div ref={chartContainerRef} style={{ width: "100%", height: "100%" }} />
+    </div>
+  );
 }
