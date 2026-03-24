@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Search } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Search, Clock } from "lucide-react";
 
 interface SearchResult {
   symbol: string;
@@ -14,11 +14,34 @@ interface SearchBoxProps {
   onSelect: (symbol: string) => void;
 }
 
+interface RecentSearch {
+  symbol: string;
+  name: string;
+}
+
 export default function SearchBox({ onSelect }: SearchBoxProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<RecentSearch[]>([]);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("recent_stocks");
+      if (saved) setRecentSearches(JSON.parse(saved));
+    } catch {}
+  }, []);
+
+  const addRecentSearch = (symbol: string, name: string) => {
+    setRecentSearches(prev => {
+      const newRecent = [{ symbol, name }, ...prev.filter(r => r.symbol !== symbol)].slice(0, 5);
+      try {
+        localStorage.setItem("recent_stocks", JSON.stringify(newRecent));
+      } catch {}
+      return newRecent;
+    });
+  };
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +111,7 @@ export default function SearchBox({ onSelect }: SearchBoxProps) {
                 onClick={() => {
                   setQuery(r.symbol);
                   setShowDropdown(false);
+                  addRecentSearch(r.symbol, r.shortname || r.symbol);
                   onSelect(r.symbol);
                 }}
                 style={{
@@ -111,6 +135,43 @@ export default function SearchBox({ onSelect }: SearchBoxProps) {
               </div>
             ))
           )}
+        </div>
+      )}
+
+      {recentSearches.length > 0 && !showDropdown && (
+        <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.75rem", flexWrap: "wrap", justifyContent: "center", alignItems: "center" }} className="animate-fade-in">
+          <span style={{ display: "flex", alignItems: "center", gap: "0.25rem", fontSize: "0.8rem", color: "var(--text-muted)", marginRight: "0.25rem" }}>
+            <Clock size={14} /> 최근:
+          </span>
+          {recentSearches.map((r, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => {
+                setQuery(r.symbol);
+                addRecentSearch(r.symbol, r.name);
+                onSelect(r.symbol);
+              }}
+              style={{
+                background: "rgba(255, 255, 255, 0.05)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "16px",
+                padding: "4px 12px",
+                fontSize: "0.8rem",
+                color: "var(--foreground)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: "0.4rem",
+                transition: "all 0.2s"
+              }}
+              onMouseOver={(e) => { e.currentTarget.style.background = "rgba(59, 130, 246, 0.2)"; e.currentTarget.style.borderColor = "var(--primary)"; }}
+              onMouseOut={(e) => { e.currentTarget.style.background = "rgba(255, 255, 255, 0.05)"; e.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.1)"; }}
+            >
+              <strong style={{ color: "var(--primary)", fontWeight: 700 }}>{r.symbol}</strong>
+              <span style={{ color: "var(--text-muted)", fontSize: "0.75rem" }}>{r.name}</span>
+            </button>
+          ))}
         </div>
       )}
     </div>
